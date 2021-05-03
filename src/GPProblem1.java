@@ -1,34 +1,35 @@
+
+
 import org.jgap.InvalidConfigurationException;
 import org.jgap.gp.CommandGene;
 import org.jgap.gp.GPProblem;
-import org.jgap.gp.function.Add;
-import org.jgap.gp.function.Multiply;
-import org.jgap.gp.function.Pow;
+import org.jgap.gp.function.*;
 import org.jgap.gp.impl.DeltaGPFitnessEvaluator;
 import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
 import org.jgap.gp.terminal.Terminal;
 import org.jgap.gp.terminal.Variable;
 
-/**
- * @author carlos
- *
- */
-public class GPProblem1 extends GPProblem {
-    private Variable _xVariable;
 
-    public GPProblem1() throws InvalidConfigurationException {
+public class GPProblem1 extends GPProblem {
+    private Variable xVariable;
+    private Double[] INPUT;
+    private Double[] OUTPUT;
+
+    public GPProblem1(Double[] INPUT, Double[] OUTPUT) throws InvalidConfigurationException {
         super(new GPConfiguration());
 
         GPConfiguration config = getGPConfiguration();
 
-        _xVariable = Variable.create(config, "X", CommandGene.DoubleClass);
+        this.INPUT = INPUT;
+        this.OUTPUT = OUTPUT;
+        this.xVariable = Variable.create(config, "X", CommandGene.DoubleClass);
 
         config.setGPFitnessEvaluator(new DeltaGPFitnessEvaluator());
         config.setMaxInitDepth(4);
-        config.setPopulationSize(1000);
-        config.setMaxCrossoverDepth(8);
-        config.setFitnessFunction(new MyFitnessFunction(INPUT_1, OUTPUT, _xVariable));
+        config.setPopulationSize(2000);
+        config.setMaxCrossoverDepth(10);
+        config.setFitnessFunction(new MyFitnessFunction(INPUT, OUTPUT, xVariable));
         config.setStrictProgramCreation(true);
     }
 
@@ -46,9 +47,12 @@ public class GPProblem1 extends GPProblem {
         // use.
         CommandGene[][] nodeSets = {
                 {
-                        _xVariable,
+                        xVariable,
                         new Add(config, CommandGene.DoubleClass),
+                        new Subtract(config, CommandGene.DoubleClass),
                         new Multiply(config, CommandGene.DoubleClass),
+                        new Divide(config, CommandGene.DoubleClass),
+                        new Pow(config, CommandGene.DoubleClass),
                         new Terminal(config, CommandGene.DoubleClass, 0.0, 10.0, true)
                 }
         };
@@ -58,16 +62,4 @@ public class GPProblem1 extends GPProblem {
 
         return result;
     }
-
-    public static void main(String[] args) throws Exception {
-        GPProblem problem = new GPProblem1();
-
-        GPGenotype gp = problem.create();
-        gp.setVerboseOutput(true);
-        gp.evolve(30);
-
-        System.out.println("Formula to discover: -");
-        gp.outputSolution(gp.getAllTimeBest());
-    }
-
 }

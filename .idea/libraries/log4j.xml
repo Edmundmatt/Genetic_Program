@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="log4j">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Desktop/jgap_3.6.3_jar/lib/log4j.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jgap_3.6.3_jar/lib/log4j.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
